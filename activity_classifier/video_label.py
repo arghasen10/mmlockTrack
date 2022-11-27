@@ -1,14 +1,14 @@
 import cv2
 import glob
 from datetime import datetime, timedelta
-video_files = glob.glob("ground_truth/*.mp4")
-cap = cv2.VideoCapture(video_files[2])
+video_files = glob.glob("ground_truth/2022-11-26 20-29-04.mp4")
+cap = cv2.VideoCapture(video_files[0])
 fps = cap.get(cv2.CAP_PROP_FPS)
 print(fps)
 frame_count = 0
-start_time = video_files[2].split(".")[0].split("/")[-1]
+start_time = video_files[0].split(".")[0].split("/")[-1]
 start_time = datetime.strptime(start_time, "%Y-%m-%d %H-%M-%S")
-result = cv2.VideoWriter('filename'+str(start_time)+'.avi', cv2.VideoWriter_fourcc(*'MJPG'), 10, (int(cap.get(3)),
+result = cv2.VideoWriter('filename'+str(start_time)+'.avi', cv2.VideoWriter_fourcc(*'MJPG'), fps, (int(cap.get(3)),
                                                                                                   int(cap.get(4))))
 
 while cap.isOpened():

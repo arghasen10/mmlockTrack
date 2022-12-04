@@ -11,6 +11,15 @@ plt.rcParams["axes.labelweight"] = "bold"
 alpha = 0.25
 
 
+def centroid(*points):
+    x_coords = [p[0] for p in points]
+    y_coords = [p[1] for p in points]
+    _len = len(points)
+    centroid_x = sum(x_coords)/_len
+    centroid_y = sum(y_coords)/_len
+    return [centroid_x, centroid_y]
+
+
 def _invert(x, limits):
     """inverts a value x on a scale from limits[0] to limits[1]"""
     return limits[1] - (x - limits[0])
@@ -54,8 +63,7 @@ class ComplexRadar:
         for i, ax in enumerate(axes):
             grid = np.linspace(*ranges[i],
                                num=n_ordinate_levels)
-            gridlabel = ["{}".format(math.floor(round(x, 2)))
-                         for x in grid]
+            gridlabel = ["" for x in grid]
             if ranges[i][0] > ranges[i][1]:
                 grid = grid[::-1]  # hack to invert grid
                 # gridlabels aren't reversed
@@ -80,9 +88,9 @@ class ComplexRadar:
 
 # parameters
 variables = (
-    "                       Area Coverage \n                        (max: 360\N{DEGREE SIGN})", "Multi User \n \n ",
+    "                       Area Coverage ", "Multi User \n \n ",
     "Micro                  \n    activities                      \n", "    User                 \n orientation              \n",
-    "\n \n \n \n Monitoring rate \n(opportunistic:1 , continuous:2)",
+    "\n \n \n \n Monitoring rate",
     "\n \n \n \n Macro     \n activities    \n")
 ranges = [(360, 0), (10, 0),
           (5, 0), (360, 0), (2, 0), (6, 0)]
@@ -121,8 +129,8 @@ radar.plot(mmsense, "-", lw=2, color='g', alpha=alpha, marker = 'v', ms = 9, lab
 radar.fill(mmsense, alpha=alpha, color='g')
 radar.plot(mmgaitnet, "-", lw=2, color='tab:orange', alpha=alpha, marker = 'D', ms = 9, label="mmGaitNet []")
 radar.fill(mmgaitnet, alpha=alpha, color='tab:orange')
-radar.plot(ourmethod, "-", lw=2, color='0', alpha=alpha, marker = '*', ms = 9, label="MARS []")
-radar.fill(ourmethod, alpha=alpha)
+# radar.plot(ourmethod, "-", lw=2, color='0', alpha=alpha, marker = '*', ms = 9, label="MARS []")
+# radar.fill(ourmethod, alpha=alpha)
 radar.ax.legend(bbox_to_anchor=(1.1, 1.1), loc='upper left', borderaxespad=0)
 plt.savefig('sample_dimensions.pdf',bbox_inches='tight')
 plt.show()

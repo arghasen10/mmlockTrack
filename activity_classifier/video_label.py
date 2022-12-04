@@ -1,7 +1,7 @@
 import cv2
 import glob
 from datetime import datetime, timedelta
-video_files = glob.glob("ground_truth/2022-11-24 00-00-15.mp4")
+video_files = glob.glob("ground_truth/2022-11-28 21-08-26.mp4")
 cap = cv2.VideoCapture(video_files[0])
 fps = cap.get(cv2.CAP_PROP_FPS)
 print(fps)

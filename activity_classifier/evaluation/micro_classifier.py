@@ -2,7 +2,6 @@ import tensorflow as tf
 from tensorflow.keras.utils import to_categorical
 import numpy as np
 from sklearn.model_selection import train_test_split
-import datetime
 tf.random.set_seed(32)
 np.random.seed(32)
 import pandas as pd
@@ -10,6 +9,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix,f1_score,classification_report
 import seaborn as sns
+
+plt.rcParams.update({'font.size': 22})
+plt.rcParams["figure.figsize"] = (10, 7)
+plt.rcParams["font.weight"] = "bold"
+plt.rcParams["axes.labelweight"] = "bold"
+
 
 
 def scale(doppz, Max=9343, Min=36240):

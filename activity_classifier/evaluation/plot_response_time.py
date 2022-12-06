@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-plt.rcParams.update({'font.size': 18})
-plt.rcParams["figure.figsize"] = (11, 6)
+plt.rcParams.update({'font.size': 22})
+plt.rcParams["figure.figsize"] = (10, 7)
 plt.rcParams["font.weight"] = "bold"
 plt.rcParams["axes.labelweight"] = "bold"
 
@@ -34,7 +34,7 @@ ax.bar(x, y8, bottom=y1+y2+y3+y4+y5+y6+y7, color='y', hatch='.')
 ax.bar(x, y9, bottom=y1+y2+y3+y4+y5+y6+y7+y8, color='tab:orange', hatch='.')
 ax.set_xlabel('Scenario')
 ax.set_ylabel('Response Time (sec)')
-ax.legend(ncol=3,  bbox_to_anchor=(0.78, 1.15),)
+ax.legend(ncol=3,  bbox_to_anchor=(1, 1.15),)
 plt.grid()
 plt.tight_layout()
 plt.show()

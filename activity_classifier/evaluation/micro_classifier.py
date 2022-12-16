@@ -2,19 +2,19 @@ import tensorflow as tf
 from tensorflow.keras.utils import to_categorical
 import numpy as np
 from sklearn.model_selection import train_test_split
+
 tf.random.set_seed(32)
 np.random.seed(32)
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.metrics import confusion_matrix,f1_score,classification_report
+from sklearn.metrics import confusion_matrix, f1_score, classification_report
 import seaborn as sns
 
-plt.rcParams.update({'font.size': 22})
+plt.rcParams.update({'font.size': 18})
 plt.rcParams["figure.figsize"] = (10, 7)
 plt.rcParams["font.weight"] = "bold"
 plt.rcParams["axes.labelweight"] = "bold"
-
 
 
 def scale(doppz, Max=9343, Min=36240):
@@ -30,7 +30,7 @@ def StackFrames(doppz, labels, frame_stack=10):
 
 
 class Dataset:
-    def __init__(self, loc="micro_df.pkl", frame_stack=2):
+    def __init__(self, loc="micro_df2.pkl", frame_stack=2):
         print(f"loading dataset from {loc}")
         df = pd.read_pickle(loc)
         df = df[df.Activity != '  '].reset_index()
@@ -46,49 +46,54 @@ class Dataset:
 
 
 def get_dataset():
-    data = Dataset(loc='../micro_df.pkl',
-                         frame_stack=2)
-    
-    lbl_map ={'laptop-typing': 0,
-              'phone-talking': 1, 
-              'phone-typing': 2,
-              'sitting': 3
-              }
-    
+    data = Dataset(loc='../micro_df2.pkl',
+                   frame_stack=2)
+
+    lbl_map = {'laptop-typing': 0,
+               'sitting': 1,
+               'phone-typing': 2,
+               'phone-talking': 3,
+               'playing-guitar': 4,
+               'eating-food': 5
+               }
+
     X_norm = data.data
-    y = to_categorical(np.array(list(map(lambda e: lbl_map[e], data.label))), num_classes=4)
-    
+    y = to_categorical(np.array(list(map(lambda e: lbl_map[e], data.label))), num_classes=6)
+
     X_train, X_test, y_train, y_test = train_test_split(X_norm, y, test_size=0.3, random_state=42)
     return X_train, X_test, y_train, y_test
 
 
 def get_model():
-    model=tf.keras.Sequential([
-        tf.keras.layers.Conv2D(32,(3,2),(2,1),padding="same",activation='relu',input_shape=(128,64,2)),
-        tf.keras.layers.Conv2D(64,(3,3),(2,2),padding="same",activation='relu'),
-        tf.keras.layers.Conv2D(96,(3,3),(2,2),padding="same",activation='relu'),
+    model = tf.keras.Sequential([
+        tf.keras.layers.Conv2D(32, (3, 2), (2, 1), padding="same", activation='relu', input_shape=(128, 64, 2)),
+        tf.keras.layers.Conv2D(64, (3, 3), (2, 2), padding="same", activation='relu'),
+        tf.keras.layers.Conv2D(96, (3, 3), (2, 2), padding="same", activation='relu'),
         tf.keras.layers.GlobalAveragePooling2D(),
         tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.Dense(32,"relu"),
+        tf.keras.layers.Dense(32, "relu"),
         tf.keras.layers.Dropout(0.1),
-        tf.keras.layers.Dense(4,"softmax")
+        tf.keras.layers.Dense(6, "softmax")
     ])
     return model
 
 
-X_train, X_test, y_train, y_test=get_dataset()
+X_train, X_test, y_train, y_test = get_dataset()
 
 model2 = get_model()
 
-model2.load_weights('../micro_2fs.h5')
+model2.load_weights('../micro_weights_new.h5')
 pred = model2.predict([X_test])
 
-conf_matrix = confusion_matrix(np.argmax(y_test, axis=1),np.argmax(pred, axis=1))
+conf_matrix = confusion_matrix(np.argmax(y_test, axis=1), np.argmax(pred, axis=1))
 total = conf_matrix / conf_matrix.sum(axis=1).reshape(-1, 1)
-total = np.round(total,2)
-labels = ['laptop-typing', 'phone-talking', 'phone-typing', 'sitting']
+total = np.round(total, 2)
+labels = ['laptop\ntyping', 'sitting', 'phone\ntyping', 'phone\ntalking', 'playing\nguitar', 'eating\nfood']
 df_cm = pd.DataFrame(total, index=[i for i in labels], columns=[i for i in labels])
 sns.heatmap(df_cm, vmin=0, vmax=1, annot=True, cmap="Blues")
+plt.xticks(rotation=25)
+plt.yticks(rotation=25)
+plt.tight_layout()
 plt.savefig('micro_classification.pdf')
 plt.show()
 print(classification_report(np.argmax(y_test, axis=1), np.argmax(pred, axis=1)))

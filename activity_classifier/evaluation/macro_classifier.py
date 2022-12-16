@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, f1_score, classification_report
 import seaborn as sns
-plt.rcParams.update({'font.size': 22})
+plt.rcParams.update({'font.size': 18})
 plt.rcParams["figure.figsize"] = (10, 7)
 plt.rcParams["font.weight"] = "bold"
 plt.rcParams["axes.labelweight"] = "bold"
@@ -89,8 +89,9 @@ total = np.round(total, 2)
 labels = ['Clapping', 'jumping', 'lunges', 'running', 'squats', 'walking', 'waving']
 df_cm = pd.DataFrame(total, index=[i for i in labels], columns=[i for i in labels])
 sns.heatmap(df_cm, vmin=0, vmax=1, annot=True, cmap="Blues")
+plt.xticks(rotation=25)
+plt.yticks(rotation=25)
 plt.tight_layout()
 plt.savefig('macro_classification.pdf')
 plt.show()
-
 print(classification_report(np.argmax(y_test, axis=1), np.argmax(pred, axis=1)))

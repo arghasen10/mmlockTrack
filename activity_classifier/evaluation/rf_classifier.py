@@ -7,7 +7,7 @@ import seaborn as sns
 import pickle
 from imblearn.over_sampling import SMOTE
 
-plt.rcParams.update({'font.size': 22})
+plt.rcParams.update({'font.size': 18})
 plt.rcParams["figure.figsize"] = (10, 7)
 plt.rcParams["font.weight"] = "bold"
 plt.rcParams["axes.labelweight"] = "bold"
@@ -33,7 +33,7 @@ result = "confusion matrix\n" + repr(
 print(result)
 total = conf_matrix / conf_matrix.sum(axis=1).reshape(-1, 1)
 total = np.round(total,2)
-labels = ['macro', 'micro', 'track']
+labels = ['macro', 'micro', 'walking\nor running']
 df_cm = pd.DataFrame(total, index=[i for i in labels], columns=[i for i in labels])
 sns.heatmap(df_cm, vmin=0, vmax=1, annot=True, cmap="Blues")
 plt.savefig('rf_classification.pdf')
